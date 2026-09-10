@@ -1,0 +1,41 @@
+# ============================
+# Datos crudos de PISA (pesados)
+# ============================
+data/*.sav
+data/*.csv
+data/*.zip
+
+# ============================
+# renv - librería privada (pesada, no se sube)
+# ============================
+renv/library/
+renv/local/
+renv/cellar/
+renv/lock/
+renv/python/
+renv/sandbox/
+renv/staging/
+
+# ============================
+# R - archivos temporales / sesión
+# ============================
+.Rhistory
+.RData
+.Rproj.user/
+*.Rproj
+
+# ============================
+# Quarto - archivos generados al renderizar
+# ============================
+/.quarto/
+*_files/
+*_cache/
+
+# Si NO quieres subir el HTML renderizado, descomenta:
+# notebook/*.html
+
+# ============================
+# Sistema operativo
+# ============================
+.DS_Store
+Thumbs.db

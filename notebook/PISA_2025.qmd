@@ -1,0 +1,511 @@
+---
+title: "Impacto del Uso de IA en los Resultados PISA 2025 (Ecuador)"
+author: "Tu Nombre"
+format: 
+  html:
+    toc: true
+    toc-depth: 3
+    theme: cosmo
+    code-fold: show
+editor: visual
+---
+
+## Fase 1: Preguntar — Definición del problema
+
+Antes de tocar los datos, definimos la pregunta de investigación aplicando la técnica de **los 5 Por Qué**, para asegurarnos de que el análisis responde a una necesidad real y no solo a una curiosidad exploratoria.
+
+1.  **¿Por qué nos interesa el uso de IA en el aprendizaje?**\
+    Porque las herramientas de IA se están integrando rápidamente en las aulas y queremos saber si mejoran o perjudican el aprendizaje.
+
+2.  **¿Por qué queremos saber si mejora o perjudica el aprendizaje?**\
+    Porque las políticas educativas (compra de licencias, capacitación docente, restricciones de uso) dependen de evidencia sobre su efecto real.
+
+3.  **¿Por qué necesitamos evidencia y no solo intuición?**\
+    Porque el uso de IA está correlacionado con el nivel socioeconómico (ESCS) y el tipo de colegio, lo que puede generar conclusiones engañosas si no se controla estadísticamente.
+
+4.  **¿Por qué es importante controlar por esas variables?**\
+    Porque sin ese control atribuiríamos a la IA un efecto que en realidad proviene de tener más recursos económicos o estudiar en un colegio privado.
+
+5.  **¿Por qué esto importa para Ecuador específicamente?**\
+    Porque las brechas entre colegios públicos y privados son amplias, y entender si la IA amplía o reduce esa brecha es clave para diseñar política pública focalizada.
+
+**Pregunta de investigación:** ¿Cuál es el efecto del uso de herramientas de IA sobre el desempeño en matemáticas (PISA) de estudiantes ecuatorianos, una vez controlado el nivel socioeconómico, y ese efecto difiere entre colegios públicos y privados?
+
+**Hipótesis de trabajo:**
+
+- H1: El uso de IA tiene una relación no lineal (forma de U invertida) con el desempeño: ayuda hasta cierto punto y luego perjudica (dependencia, distracción).
+- H2: El efecto difiere por sector institucional (público vs. privado).
+
+> Nota: el script original mencionaba "urbano vs. rural", pero la variable realmente disponible en el código es `SC013Q01TA` (sostenimiento del colegio: público/privado). Mantengo esa comparación porque es la que existe en los datos; si tienes una variable de ubicación (por ejemplo, tipo de comunidad `SC001Q01TA`), avísame y agrego esa comparación también.
+
+------------------------------------------------------------------------
+
+## Fase 2: Preparar los datos para la exploración
+
+### 2.1 Cargar librerías
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+
+# --- Carga y manipulación de datos ---
+library(tidyverse)    # dplyr, ggplot2, tidyr, readr
+library(haven)        # importar archivos .sav (SPSS) manteniendo etiquetas
+
+# --- Análisis econométrico e inferencia causal ---
+library(fixest)       # modelos con efectos fijos y errores agrupados (clusters)
+library(MatchIt)      # Propensity Score Matching (PSM)
+library(car)          # diagnóstico VIF (multicolinealidad)
+library(lmtest)       # pruebas de hipótesis e inferencia robusta
+library(sandwich)     # matrices de covarianza robustas
+
+# --- Manejo específico de datos PISA (muestreo complejo) ---
+library(intsvy)       # valores plausibles (PVs) y pesos muestrales de PISA
+
+# --- Presentación de resultados ---
+library(modelsummary) # tablas de regresión
+library(kableExtra)   # formato de tablas
+library(patchwork)    # combinar gráficos de ggplot2
+```
+
+### 2.2 Cargar las bases de datos
+
+```{r}
+#| label: cargar-datos
+#| message: false
+
+# 1. Cargar bases de datos crudas (SPSS)
+estudiantes <- read_sav("../data/CY09_MS_STU_PUF.sav")
+colegios    <- read_sav("../data/CY09_MS_SCH_PUF.sav")
+
+# 2. Filtrar solo Ecuador (ECU)
+estudiantes_ecu <- estudiantes %>% filter(CNT == "ECU")
+colegios_ecu    <- colegios    %>% filter(CNT == "ECU")
+
+# 3. Unir estudiantes con colegios mediante el ID de escuela
+pisa_completa <- estudiantes_ecu %>%
+  left_join(colegios_ecu, by = "CNTSCHID", suffix = c("_stu", "_sch"))
+
+# 4. Chequeo rápido de dimensiones (no imprime todas las columnas)
+dim(pisa_completa)
+```
+
+### 2.3 Exploración inicial de variables candidatas
+
+```{r}
+#| label: explorar-variables
+#| message: false
+
+# Buscar variables relacionadas con sostenimiento del colegio (público/privado)
+names(pisa_completa)[str_detect(names(pisa_completa), "SCH|PRIV")]
+
+# Ver codificación real de la variable de sostenimiento
+table(pisa_completa$SCHLTYPE, useNA = "always")
+table(pisa_completa$SC013Q01TA, useNA = "always")
+```
+
+------------------------------------------------------------------------
+
+## Fase 3: Procesar y limpiar los datos
+
+Construimos **un único dataset analítico** (`pisa_analisis`) con todas las variables que se usarán en el resto del análisis, para evitar duplicar limpieza en distintos bloques.
+
+```{r}
+#| label: construir-dataset-analitico
+#| message: false
+
+pisa_analisis <- pisa_completa %>%
+  mutate(
+    # Variable de sexo: 1 = mujer, 0 = hombre (según codificación ST004D01T)
+    female = ifelse(ST004D01T == 1, 1, 0),
+    # Sector institucional a partir de la pregunta del director (2 = privado)
+    es_privado = ifelse(as.numeric(SC013Q01TA) == 2, "Privado", "Público"),
+    # Cuartiles de intensidad de uso de IA (1 = bajo, 4 = muy alto)
+    uso_ia_cuartil = ntile(AIUSESCH, 4)
+  ) %>%
+  select(
+    student_id = CNTSTUID,     # ID del estudiante
+    school_id  = CNTSCHID,     # ID del colegio
+    escs       = ESCS,         # índice socioeconómico
+    female,                    # sexo (1 = mujer)
+    es_privado,                # sector institucional
+    uso_ia     = AIUSESCH,     # índice de uso de IA
+    uso_ia_cuartil,            # cuartiles de uso de IA
+    w_fstu     = W_FSTUWT,     # peso muestral final del estudiante
+    starts_with("PV") & contains("MATH")  # PV1MATH ... PV10MATH
+  ) %>%
+  # Eliminar observaciones sin información clave para el análisis
+  drop_na(escs, uso_ia, female, es_privado)
+
+# Variable de tratamiento dicotómica: 1 = uso de IA por encima de la mediana
+pisa_analisis <- pisa_analisis %>%
+  mutate(tratamiento_ia = ifelse(uso_ia > median(uso_ia, na.rm = TRUE), 1, 0))
+
+# Verificación rápida del dataset final
+glimpse(pisa_analisis)
+table(pisa_analisis$tratamiento_ia, useNA = "always")
+table(pisa_analisis$es_privado, useNA = "always")
+```
+
+------------------------------------------------------------------------
+
+## Fase 4: Analizar los datos
+
+Vamos de lo simple a lo complejo: **estadísticas descriptivas → gráficos univariados → correlación → VIF → modelo base → modelo corregido → modelo por sector**.
+
+### 4.1 Estadísticas descriptivas
+
+```{r}
+#| label: estadisticas-descriptivas
+
+# Tabla descriptiva general por sector institucional
+datasummary(
+  (PV1MATH + uso_ia + escs + female) ~ es_privado * (Mean + SD + Min + Max),
+  data = pisa_analisis,
+  fmt = 2,
+  title = "Estadísticas Descriptivas por Sector Institucional"
+)
+```
+
+### 4.2 Gráficos univariados (distribución de variables)
+
+```{r}
+#| label: grafico-distribucion-rendimiento
+#| fig.width: 6
+#| fig.height: 4
+
+# Distribución del rendimiento en matemáticas por sector
+g1 <- ggplot(pisa_analisis, aes(x = PV1MATH, fill = es_privado)) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c("Público" = "#2b5c8f", "Privado" = "#d95f02")) +
+  labs(title = "Distribución del Rendimiento en Matemáticas",
+       x = "Puntaje PV1MATH", y = "Densidad", fill = "Sector") +
+  theme_minimal()
+
+g1
+```
+
+```{r}
+#| label: grafico-distribucion-uso-ia
+#| fig.width: 6
+#| fig.height: 4
+
+# Distribución del uso de IA por sector
+g2 <- ggplot(pisa_analisis, aes(x = uso_ia, fill = es_privado)) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c("Público" = "#2b5c8f", "Privado" = "#d95f02")) +
+  labs(title = "Distribución del Uso de IA",
+       x = "Índice de Uso (SD)", y = "Densidad", fill = "Sector") +
+  theme_minimal()
+
+g2
+```
+
+```{r}
+#| label: grafico-bivariado-exploratorio
+#| fig.width: 6
+#| fig.height: 4
+#| message: false
+
+# Relación bivariada preliminar (scatter + suavizado LOESS), sin ajuste econométrico
+g3 <- ggplot(pisa_analisis, aes(x = uso_ia, y = PV1MATH, color = es_privado)) +
+  geom_point(alpha = 0.1, size = 0.8) +
+  geom_smooth(method = "loess", se = TRUE, linewidth = 1.2) +
+  scale_color_manual(values = c("Público" = "#2b5c8f", "Privado" = "#d95f02")) +
+  labs(title = "Correlación Suavizada (LOESS) Sin Ajuste Econométrico",
+       x = "Uso de IA", y = "Puntaje Matemáticas", color = "Sector") +
+  theme_minimal()
+
+g3
+```
+
+```{r}
+#| label: grafico-univariados-combinado
+#| fig.width: 9
+#| fig.height: 6
+
+# Vista combinada de los tres gráficos anteriores (solo para reporte final)
+(g1 + g2) / g3
+```
+
+### 4.3 Matriz de correlación
+
+```{r}
+#| label: matriz-correlacion
+#| fig.width: 5
+#| fig.height: 4
+
+# Seleccionar variables numéricas de interés
+vars_cor <- pisa_analisis %>%
+  select(PV1MATH, uso_ia, escs, female) %>%
+  drop_na()
+
+# Calcular matriz de correlación
+matriz_cor <- cor(vars_cor)
+round(matriz_cor, 2)
+
+# Visualizar como mapa de calor con ggplot2
+matriz_cor_long <- as.data.frame(matriz_cor) %>%
+  rownames_to_column("var1") %>%
+  pivot_longer(-var1, names_to = "var2", values_to = "correlacion")
+
+ggplot(matriz_cor_long, aes(x = var1, y = var2, fill = correlacion)) +
+  geom_tile() +
+  geom_text(aes(label = round(correlacion, 2)), color = "white", size = 4) +
+  scale_fill_gradient2(low = "#d95f02", mid = "white", high = "#2b5c8f", midpoint = 0) +
+  labs(title = "Matriz de Correlación", x = NULL, y = NULL, fill = "r") +
+  theme_minimal()
+```
+
+### 4.4 Diagnóstico de multicolinealidad (VIF)
+
+```{r}
+#| label: diagnostico-vif
+
+# Ajustamos un modelo lineal auxiliar (lm) solo para calcular el VIF,
+# ya que car::vif() no admite directamente objetos feols
+modelo_vif <- lm(PV1MATH ~ uso_ia + escs + female, data = pisa_analisis)
+vif(modelo_vif)
+
+# Regla práctica: VIF > 5 (o > 10) sugiere multicolinealidad preocupante
+```
+
+### 4.5 Balanceo de muestra mediante PSM (Propensity Score Matching)
+
+Dado que los estudiantes con mayor `escs` tienden a usar más tecnología, emparejamos a los estudiantes tratados y de control usando `MatchIt` antes de estimar el modelo:
+
+```{r}
+#| label: propensity-score-matching
+#| message: false
+
+# Emparejamiento 1:1 por propensity score
+psm_model <- matchit(
+  tratamiento_ia ~ escs + female,
+  data = pisa_analisis,
+  method = "nearest",
+  caliper = 0.1
+)
+
+# Dataset emparejado y balanceado
+df_match <- match.data(psm_model)
+
+# Verificar balance de covariables tras el emparejamiento
+summary(psm_model)
+```
+
+### 4.6 Modelo base (sin corregir)
+
+```{r}
+#| label: modelo-base
+#| message: false
+
+# OLS simple: efecto del tratamiento (alto vs. bajo uso de IA) sin efectos fijos
+m1 <- feols(PV1MATH ~ tratamiento_ia + escs + female,
+            data = df_match, weights = ~w_fstu)
+
+summary(m1)
+```
+
+### 4.7 Modelo corregido (efectos fijos + errores agrupados por colegio)
+
+```{r}
+#| label: modelo-corregido
+#| message: false
+
+# Se agregan efectos fijos de colegio y errores estándar agrupados (cluster)
+# por school_id, para no atribuir a la IA variación explicada por el colegio
+m2 <- feols(PV1MATH ~ tratamiento_ia + escs + female | school_id,
+            data = df_match, weights = ~w_fstu, cluster = ~school_id)
+
+# Comparación lado a lado del modelo base vs. corregido
+modelsummary(
+  list("Modelo base (OLS)" = m1, "Modelo corregido (Efectos Fijos)" = m2),
+  stars = TRUE,
+  gof_omit = "IC|Log|F"
+)
+```
+
+### 4.8 Modelo no lineal, robusto a los 10 valores plausibles (PVs)
+
+PISA reporta 10 valores plausibles del desempeño (en vez de un solo puntaje) para representar la incertidumbre de la medición. Estimamos el modelo cuadrático en cada uno y promediamos los coeficientes:
+
+```{r}
+#| label: modelo-no-lineal-pvs
+#| message: false
+
+pvs <- paste0("PV", 1:10, "MATH")
+
+modelos_pvs <- lapply(pvs, function(pv) {
+  formula <- as.formula(paste(pv, "~ uso_ia + I(uso_ia^2) + escs + female | school_id"))
+  feols(formula, data = df_match, weights = ~w_fstu, cluster = ~school_id)
+})
+
+# Promediar coeficientes de los 10 modelos (uno por cada PV)
+coef_promedio <- rowMeans(sapply(modelos_pvs, coef))
+print(coef_promedio)
+```
+
+### 4.9 Modelo comparado: sector Público vs. Privado
+
+```{r}
+#| label: modelo-publico-vs-privado
+#| message: false
+
+# Estimar los 10 PVs por separado para cada sector institucional
+modelos_publico <- lapply(pvs, function(pv) {
+  feols(as.formula(paste(pv, "~ uso_ia + I(uso_ia^2) + escs + female")),
+        data = filter(df_match, es_privado == "Público"), weights = ~w_fstu)
+})
+
+modelos_privado <- lapply(pvs, function(pv) {
+  feols(as.formula(paste(pv, "~ uso_ia + I(uso_ia^2) + escs + female")),
+        data = filter(df_match, es_privado == "Privado"), weights = ~w_fstu)
+})
+
+# Promediar coeficientes por sector
+coef_pub  <- rowMeans(sapply(modelos_publico, coef))
+coef_priv <- rowMeans(sapply(modelos_privado, coef))
+
+print(coef_pub)
+print(coef_priv)
+```
+
+------------------------------------------------------------------------
+
+## Fase 5: Compartir los resultados mediante visualización
+
+### 5.1 Boxplot: rendimiento por nivel de uso de IA (tratamiento)
+
+```{r}
+#| label: grafico-boxplot-tratamiento
+#| fig.width: 7
+#| fig.height: 4
+
+ggplot(df_match, aes(x = factor(tratamiento_ia, labels = c("Bajo Uso IA", "Alto Uso IA")),
+                      y = PV1MATH, fill = factor(tratamiento_ia))) +
+  geom_boxplot(alpha = 0.7, show.legend = FALSE) +
+  scale_fill_manual(values = c("#2b5c8f", "#d95f02")) +
+  labs(
+    title = "Distribución del Rendimiento en Matemáticas por Uso de IA",
+    subtitle = "Muestra balanceada por estatus socioeconómico (PSM)",
+    x = "Nivel de Uso de Herramientas de IA",
+    y = "Puntaje Plausible en Matemáticas (PV1MATH)"
+  ) +
+  theme_minimal()
+```
+
+### 5.2 Boxplot: rendimiento por cuartil de intensidad de uso
+
+```{r}
+#| label: grafico-boxplot-cuartiles
+#| fig.width: 7
+#| fig.height: 4
+
+ggplot(df_match, aes(x = factor(uso_ia_cuartil), y = PV1MATH, fill = factor(uso_ia_cuartil))) +
+  geom_boxplot(alpha = 0.7, show.legend = FALSE) +
+  scale_fill_brewer(palette = "Blues") +
+  labs(
+    title = "Efecto No Lineal del Uso de IA en Matemáticas",
+    subtitle = "Comparación por cuartiles de intensidad de uso",
+    x = "Cuartiles de Uso de IA (1: Bajo / 4: Muy Alto)",
+    y = "Puntaje Plausible en Matemáticas"
+  ) +
+  theme_minimal()
+```
+
+### 5.3 Curva en U invertida y punto óptimo de uso
+
+```{r}
+#| label: grafico-curva-u-invertida
+#| fig.width: 7
+#| fig.height: 4
+
+# 1. Extracción segura de coeficientes
+b1 <- coef_promedio["uso_ia"]
+
+# Se busca el coeficiente cuadrático probando las dos formas en que fixest nombra la variable
+b2 <- if ("I(I(uso_ia^2))" %in% names(coef_promedio)) {
+  coef_promedio["I(I(uso_ia^2))"]
+} else {
+  coef_promedio["I(uso_ia^2)"]
+}
+
+# 2. Cálculo del punto óptimo
+optimo <- -b1 / (2 * b2)
+
+# 3. Malla de valores de uso de IA para la predicción
+grid_ia   <- seq(min(df_match_robusto$uso_ia), max(df_match_robusto$uso_ia), length.out = 100)
+base_y    <- mean(df_match_robusto$PV1MATH, na.rm = TRUE)
+pred_pisa <- base_y + (b1 * grid_ia) + (b2 * (grid_ia^2))
+
+df_curva <- data.frame(uso_ia = grid_ia, pv_pred = pred_pisa)
+
+# 4. Gráfico con ggplot2
+ggplot(df_curva, aes(x = uso_ia, y = pv_pred)) +
+  geom_line(color = "#2b5c8f", linewidth = 1.2) +
+  geom_vline(xintercept = optimo, linetype = "dashed", color = "#d95f02", linewidth = 1) +
+  annotate("text", x = optimo + 0.4, y = min(df_curva$pv_pred) + 2,
+           label = paste0("Punto Óptimo: ", round(optimo, 2), " SD"), color = "#d95f02") +
+  labs(
+    title = "Curva en U Invertida: Rendimientos Decrecientes del Uso de IA",
+    subtitle = "Promedio sobre 10 Valores Plausibles (PISA) con Efectos Fijos",
+    x = "Intensidad de Uso de IA (Estandarizado)",
+    y = "Puntaje Predicho en Matemáticas"
+  ) +
+  theme_minimal()
+```
+
+### 5.4 Comparación del efecto: sector Público vs. Privado
+
+```{r}
+#| label: grafico-comparativo-sector
+#| fig.width: 7
+#| fig.height: 4
+
+# 1. Extracción segura de los coeficientes cuadráticos para cada sector
+b2_pub <- if ("I(I(uso_ia^2))" %in% names(coef_pub)) {
+  coef_pub["I(I(uso_ia^2))"]
+} else {
+  coef_pub["I(uso_ia^2)"]
+}
+
+b2_priv <- if ("I(I(uso_ia^2))" %in% names(coef_priv)) {
+  coef_priv["I(I(uso_ia^2))"]
+} else {
+  coef_priv["I(uso_ia^2)"]
+}
+
+# 2. Generación de la malla de valores y cálculo de medias base
+grid_ia <- seq(min(pisa_tipo_colegio$uso_ia), max(pisa_tipo_colegio$uso_ia), length.out = 100)
+
+base_pub  <- mean(filter(pisa_tipo_colegio, es_privado == "Público")$PV1MATH, na.rm = TRUE)
+base_priv <- mean(filter(pisa_tipo_colegio, es_privado == "Privado")$PV1MATH, na.rm = TRUE)
+
+# 3. Construcción del dataset comparativo
+df_comparativo <- bind_rows(
+  data.frame(
+    uso_ia  = grid_ia,
+    pv_pred = base_pub + (coef_pub["uso_ia"] * grid_ia) + (b2_pub * (grid_ia^2)),
+    Sector  = "Público"
+  ),
+  data.frame(
+    uso_ia  = grid_ia,
+    pv_pred = base_priv + (coef_priv["uso_ia"] * grid_ia) + (b2_priv * (grid_ia^2)),
+    Sector  = "Privado"
+  )
+)
+
+# 4. Gráfico comparativo final
+ggplot(df_comparativo, aes(x = uso_ia, y = pv_pred, color = Sector)) +
+  geom_line(linewidth = 1.2) +
+  scale_color_manual(values = c("Público" = "#2b5c8f", "Privado" = "#d95f02")) +
+  labs(
+    title = "Efecto Diferencial del Uso de IA: Sector Público vs. Privado",
+    subtitle = "Predicción cuadrática promediada sobre 10 Valores Plausibles",
+    x = "Intensidad de Uso de IA (Estandarizado)",
+    y = "Puntaje Predicho en Matemáticas",
+    color = "Sostenimiento"
+  ) +
+  theme_minimal()
+```
