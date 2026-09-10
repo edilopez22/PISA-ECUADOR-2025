@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Tu Nombre">
+
+<title>Impacto del Uso de IA en los Resultados PISA 2025 (Ecuador)</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="PISA_2025_files/libs/clipboard/clipboard.min.js"></script>
+<script src="PISA_2025_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="PISA_2025_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="PISA_2025_files/libs/quarto-html/popper.min.js"></script>
+<script src="PISA_2025_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="PISA_2025_files/libs/quarto-html/anchor.min.js"></script>
+<link href="PISA_2025_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="PISA_2025_files/libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="PISA_2025_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="PISA_2025_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="PISA_2025_files/libs/bootstrap/bootstrap-67270d1595a62d14f123c043d4fb2f18.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#fase-1-preguntar-definición-del-problema" id="toc-fase-1-preguntar-definición-del-problema" class="nav-link active" data-scroll-target="#fase-1-preguntar-definición-del-problema">Fase 1: Preguntar — Definición del problema</a></li>
+  <li><a href="#fase-2-preparar-los-datos-para-la-exploración" id="toc-fase-2-preparar-los-datos-para-la-exploración" class="nav-link" data-scroll-target="#fase-2-preparar-los-datos-para-la-exploración">Fase 2: Preparar los datos para la exploración</a>
+  <ul class="collapse">
+  <li><a href="#cargar-librerías" id="toc-cargar-librerías" class="nav-link" data-scroll-target="#cargar-librerías">2.1 Cargar librerías</a></li>
+  <li><a href="#cargar-las-bases-de-datos" id="toc-cargar-las-bases-de-datos" class="nav-link" data-scroll-target="#cargar-las-bases-de-datos">2.2 Cargar las bases de datos</a></li>
+  <li><a href="#exploración-inicial-de-variables-candidatas" id="toc-exploración-inicial-de-variables-candidatas" class="nav-link" data-scroll-target="#exploración-inicial-de-variables-candidatas">2.3 Exploración inicial de variables candidatas</a></li>
+  </ul></li>
+  <li><a href="#fase-3-procesar-y-limpiar-los-datos" id="toc-fase-3-procesar-y-limpiar-los-datos" class="nav-link" data-scroll-target="#fase-3-procesar-y-limpiar-los-datos">Fase 3: Procesar y limpiar los datos</a></li>
+  <li><a href="#fase-4-analizar-los-datos" id="toc-fase-4-analizar-los-datos" class="nav-link" data-scroll-target="#fase-4-analizar-los-datos">Fase 4: Analizar los datos</a>
+  <ul class="collapse">
+  <li><a href="#estadísticas-descriptivas" id="toc-estadísticas-descriptivas" class="nav-link" data-scroll-target="#estadísticas-descriptivas">4.1 Estadísticas descriptivas</a></li>
+  <li><a href="#gráficos-univariados-distribución-de-variables" id="toc-gráficos-univariados-distribución-de-variables" class="nav-link" data-scroll-target="#gráficos-univariados-distribución-de-variables">4.2 Gráficos univariados (distribución de variables)</a></li>
+  <li><a href="#matriz-de-correlación" id="toc-matriz-de-correlación" class="nav-link" data-scroll-target="#matriz-de-correlación">4.3 Matriz de correlación</a></li>
+  <li><a href="#diagnóstico-de-multicolinealidad-vif" id="toc-diagnóstico-de-multicolinealidad-vif" class="nav-link" data-scroll-target="#diagnóstico-de-multicolinealidad-vif">4.4 Diagnóstico de multicolinealidad (VIF)</a></li>
+  <li><a href="#balanceo-de-muestra-mediante-psm-propensity-score-matching" id="toc-balanceo-de-muestra-mediante-psm-propensity-score-matching" class="nav-link" data-scroll-target="#balanceo-de-muestra-mediante-psm-propensity-score-matching">4.5 Balanceo de muestra mediante PSM (Propensity Score Matching)</a></li>
+  <li><a href="#modelo-base-sin-corregir" id="toc-modelo-base-sin-corregir" class="nav-link" data-scroll-target="#modelo-base-sin-corregir">4.6 Modelo base (sin corregir)</a></li>
+  <li><a href="#modelo-corregido-efectos-fijos-errores-agrupados-por-colegio" id="toc-modelo-corregido-efectos-fijos-errores-agrupados-por-colegio" class="nav-link" data-scroll-target="#modelo-corregido-efectos-fijos-errores-agrupados-por-colegio">4.7 Modelo corregido (efectos fijos + errores agrupados por colegio)</a></li>
+  <li><a href="#modelo-no-lineal-robusto-a-los-10-valores-plausibles-pvs" id="toc-modelo-no-lineal-robusto-a-los-10-valores-plausibles-pvs" class="nav-link" data-scroll-target="#modelo-no-lineal-robusto-a-los-10-valores-plausibles-pvs">4.8 Modelo no lineal, robusto a los 10 valores plausibles (PVs)</a></li>
+  <li><a href="#modelo-comparado-sector-público-vs.-privado" id="toc-modelo-comparado-sector-público-vs.-privado" class="nav-link" data-scroll-target="#modelo-comparado-sector-público-vs.-privado">4.9 Modelo comparado: sector Público vs.&nbsp;Privado</a></li>
+  </ul></li>
+  <li><a href="#fase-5-compartir-los-resultados-mediante-visualización" id="toc-fase-5-compartir-los-resultados-mediante-visualización" class="nav-link" data-scroll-target="#fase-5-compartir-los-resultados-mediante-visualización">Fase 5: Compartir los resultados mediante visualización</a>
+  <ul class="collapse">
+  <li><a href="#boxplot-rendimiento-por-nivel-de-uso-de-ia-tratamiento" id="toc-boxplot-rendimiento-por-nivel-de-uso-de-ia-tratamiento" class="nav-link" data-scroll-target="#boxplot-rendimiento-por-nivel-de-uso-de-ia-tratamiento">5.1 Boxplot: rendimiento por nivel de uso de IA (tratamiento)</a></li>
+  <li><a href="#boxplot-rendimiento-por-cuartil-de-intensidad-de-uso" id="toc-boxplot-rendimiento-por-cuartil-de-intensidad-de-uso" class="nav-link" data-scroll-target="#boxplot-rendimiento-por-cuartil-de-intensidad-de-uso">5.2 Boxplot: rendimiento por cuartil de intensidad de uso</a></li>
+  <li><a href="#curva-en-u-invertida-y-punto-óptimo-de-uso" id="toc-curva-en-u-invertida-y-punto-óptimo-de-uso" class="nav-link" data-scroll-target="#curva-en-u-invertida-y-punto-óptimo-de-uso">5.3 Curva en U invertida y punto óptimo de uso</a></li>
+  <li><a href="#comparación-del-efecto-sector-público-vs.-privado" id="toc-comparación-del-efecto-sector-público-vs.-privado" class="nav-link" data-scroll-target="#comparación-del-efecto-sector-público-vs.-privado">5.4 Comparación del efecto: sector Público vs.&nbsp;Privado</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Impacto del Uso de IA en los Resultados PISA 2025 (Ecuador)</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Tu Nombre </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="fase-1-preguntar-definición-del-problema" class="level2">
+<h2 class="anchored" data-anchor-id="fase-1-preguntar-definición-del-problema">Fase 1: Preguntar — Definición del problema</h2>
+<p>Antes de tocar los datos, definimos la pregunta de investigación aplicando la técnica de <strong>los 5 Por Qué</strong>, para asegurarnos de que el análisis responde a una necesidad real y no solo a una curiosidad exploratoria.</p>
+<ol type="1">
+<li><p><strong>¿Por qué nos interesa el uso de IA en el aprendizaje?</strong><br>
+Porque las herramientas de IA se están integrando rápidamente en las aulas y queremos saber si mejoran o perjudican el aprendizaje.</p></li>
+<li><p><strong>¿Por qué queremos saber si mejora o perjudica el aprendizaje?</strong><br>
+Porque las políticas educativas (compra de licencias, capacitación docente, restricciones de uso) dependen de evidencia sobre su efecto real.</p></li>
+<li><p><strong>¿Por qué necesitamos evidencia y no solo intuición?</strong><br>
+Porque el uso de IA está correlacionado con el nivel socioeconómico (ESCS) y el tipo de colegio, lo que puede generar conclusiones engañosas si no se controla estadísticamente.</p></li>
+<li><p><strong>¿Por qué es importante controlar por esas variables?</strong><br>
+Porque sin ese control atribuiríamos a la IA un efecto que en realidad proviene de tener más recursos económicos o estudiar en un colegio privado.</p></li>
+<li><p><strong>¿Por qué esto importa para Ecuador específicamente?</strong><br>
+Porque las brechas entre colegios públicos y privados son amplias, y entender si la IA amplía o reduce esa brecha es clave para diseñar política pública focalizada.</p></li>
+</ol>
+<p><strong>Pregunta de investigación:</strong> ¿Cuál es el efecto del uso de herramientas de IA sobre el desempeño en matemáticas (PISA) de estudiantes ecuatorianos, una vez controlado el nivel socioeconómico, y ese efecto difiere entre colegios públicos y privados?</p>
+<p><strong>Hipótesis de trabajo:</strong></p>
+<ul>
+<li>H1: El uso de IA tiene una relación no lineal (forma de U invertida) con el desempeño: ayuda hasta cierto punto y luego perjudica (dependencia, distracción).</li>
+<li>H2: El efecto difiere por sector institucional (público vs.&nbsp;privado).</li>
+</ul>
+<blockquote class="blockquote">
+<p>Nota: el script original mencionaba “urbano vs.&nbsp;rural”, pero la variable realmente disponible en el código es <code>SC013Q01TA</code> (sostenimiento del colegio: público/privado). Mantengo esa comparación porque es la que existe en los datos; si tienes una variable de ubicación (por ejemplo, tipo de comunidad <code>SC001Q01TA</code>), avísame y agrego esa comparación también.</p>
+</blockquote>
+<hr>
+</section>
+<section id="fase-2-preparar-los-datos-para-la-exploración" class="level2">
+<h2 class="anchored" data-anchor-id="fase-2-preparar-los-datos-para-la-exploración">Fase 2: Preparar los datos para la exploración</h2>
+<section id="cargar-librerías" class="level3">
+<h3 class="anchored" data-anchor-id="cargar-librerías">2.1 Cargar librerías</h3>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Carga y manipulación de datos ---</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)    <span class="co"># dplyr, ggplot2, tidyr, readr</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)        <span class="co"># importar archivos .sav (SPSS) manteniendo etiquetas</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Análisis econométrico e inferencia causal ---</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fixest)       <span class="co"># modelos con efectos fijos y errores agrupados (clusters)</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MatchIt)      <span class="co"># Propensity Score Matching (PSM)</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)          <span class="co"># diagnóstico VIF (multicolinealidad)</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest)       <span class="co"># pruebas de hipótesis e inferencia robusta</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sandwich)     <span class="co"># matrices de covarianza robustas</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Manejo específico de datos PISA (muestreo complejo) ---</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(intsvy)       <span class="co"># valores plausibles (PVs) y pesos muestrales de PISA</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Presentación de resultados ---</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelsummary) <span class="co"># tablas de regresión</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)   <span class="co"># formato de tablas</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)    <span class="co"># combinar gráficos de ggplot2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="cargar-las-bases-de-datos" class="level3">
+<h3 class="anchored" data-anchor-id="cargar-las-bases-de-datos">2.2 Cargar las bases de datos</h3>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Cargar bases de datos crudas (SPSS)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>estudiantes <span class="ot">&lt;-</span> <span class="fu">read_sav</span>(<span class="st">"../data/CY09_MS_STU_PUF.sav"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>colegios    <span class="ot">&lt;-</span> <span class="fu">read_sav</span>(<span class="st">"../data/CY09_MS_SCH_PUF.sav"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Filtrar solo Ecuador (ECU)</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>estudiantes_ecu <span class="ot">&lt;-</span> estudiantes <span class="sc">%&gt;%</span> <span class="fu">filter</span>(CNT <span class="sc">==</span> <span class="st">"ECU"</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>colegios_ecu    <span class="ot">&lt;-</span> colegios    <span class="sc">%&gt;%</span> <span class="fu">filter</span>(CNT <span class="sc">==</span> <span class="st">"ECU"</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Unir estudiantes con colegios mediante el ID de escuela</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>pisa_completa <span class="ot">&lt;-</span> estudiantes_ecu <span class="sc">%&gt;%</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(colegios_ecu, <span class="at">by =</span> <span class="st">"CNTSCHID"</span>, <span class="at">suffix =</span> <span class="fu">c</span>(<span class="st">"_stu"</span>, <span class="st">"_sch"</span>))</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Chequeo rápido de dimensiones (no imprime todas las columnas)</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(pisa_completa)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9128 1343</code></pre>
+</div>
+</div>
+</section>
+<section id="exploración-inicial-de-variables-candidatas" class="level3">
+<h3 class="anchored" data-anchor-id="exploración-inicial-de-variables-candidatas">2.3 Exploración inicial de variables candidatas</h3>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Buscar variables relacionadas con sostenimiento del colegio (público/privado)</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pisa_completa)[<span class="fu">str_detect</span>(<span class="fu">names</span>(pisa_completa), <span class="st">"SCH|PRIV"</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "CNTSCHID"    "AIUSESCH"    "ICTSCH"      "PQSCHOOL"    "ICTAVSCH"   
+ [6] "SCHID"       "SCHLTYPE"    "SCHSEL"      "SCHSIZE_Q"   "PRIVATESCH" 
+[11] "W_NRASCHBWT"</code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ver codificación real de la variable de sostenimiento</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(pisa_completa<span class="sc">$</span>SCHLTYPE, <span class="at">useNA =</span> <span class="st">"always"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+   1    2    3 &lt;NA&gt; 
+2023  204 6901    0 </code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(pisa_completa<span class="sc">$</span>SC013Q01TA, <span class="at">useNA =</span> <span class="st">"always"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+   1    2 &lt;NA&gt; 
+6901 2227    0 </code></pre>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="fase-3-procesar-y-limpiar-los-datos" class="level2">
+<h2 class="anchored" data-anchor-id="fase-3-procesar-y-limpiar-los-datos">Fase 3: Procesar y limpiar los datos</h2>
+<p>Construimos <strong>un único dataset analítico</strong> (<code>pisa_analisis</code>) con todas las variables que se usarán en el resto del análisis, para evitar duplicar limpieza en distintos bloques.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pisa_analisis <span class="ot">&lt;-</span> pisa_completa <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Variable de sexo: 1 = mujer, 0 = hombre (según codificación ST004D01T)</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">female =</span> <span class="fu">ifelse</span>(ST004D01T <span class="sc">==</span> <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Sector institucional a partir de la pregunta del director (2 = privado)</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">es_privado =</span> <span class="fu">ifelse</span>(<span class="fu">as.numeric</span>(SC013Q01TA) <span class="sc">==</span> <span class="dv">2</span>, <span class="st">"Privado"</span>, <span class="st">"Público"</span>),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Cuartiles de intensidad de uso de IA (1 = bajo, 4 = muy alto)</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">uso_ia_cuartil =</span> <span class="fu">ntile</span>(AIUSESCH, <span class="dv">4</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">student_id =</span> CNTSTUID,     <span class="co"># ID del estudiante</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">school_id  =</span> CNTSCHID,     <span class="co"># ID del colegio</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">escs       =</span> ESCS,         <span class="co"># índice socioeconómico</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    female,                    <span class="co"># sexo (1 = mujer)</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    es_privado,                <span class="co"># sector institucional</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">uso_ia     =</span> AIUSESCH,     <span class="co"># índice de uso de IA</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    uso_ia_cuartil,            <span class="co"># cuartiles de uso de IA</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">w_fstu     =</span> W_FSTUWT,     <span class="co"># peso muestral final del estudiante</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">starts_with</span>(<span class="st">"PV"</span>) <span class="sc">&amp;</span> <span class="fu">contains</span>(<span class="st">"MATH"</span>)  <span class="co"># PV1MATH ... PV10MATH</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Eliminar observaciones sin información clave para el análisis</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(escs, uso_ia, female, es_privado)</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Variable de tratamiento dicotómica: 1 = uso de IA por encima de la mediana</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>pisa_analisis <span class="ot">&lt;-</span> pisa_analisis <span class="sc">%&gt;%</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">tratamiento_ia =</span> <span class="fu">ifelse</span>(uso_ia <span class="sc">&gt;</span> <span class="fu">median</span>(uso_ia, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Verificación rápida del dataset final</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(pisa_analisis)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 8,459
+Columns: 19
+$ student_id     &lt;chr&gt; "21800003", "21800004", "21800005", "21800006", "218000…
+$ school_id      &lt;chr+lbl&gt; "21800001", "21800001", "21800001", "21800001", "21…
+$ escs           &lt;dbl+lbl&gt; -1.9727805, -1.7099417, -1.5530601, -2.0667586, -2.…
+$ female         &lt;dbl&gt; 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1…
+$ es_privado     &lt;chr&gt; "Público", "Público", "Público", "Público", "Público", …
+$ uso_ia         &lt;dbl+lbl&gt;  2.34183158,  2.23081845,  0.48789507, -0.78396435,…
+$ uso_ia_cuartil &lt;int&gt; 4, 4, 3, 1, 4, 4, 2, 4, 1, 1, 4, 1, 3, 1, 4, 3, 3, 3, 4…
+$ w_fstu         &lt;dbl&gt; 10.74885, 10.49543, 10.49543, 10.74885, 10.49543, 10.49…
+$ PV1MATH        &lt;dbl+lbl&gt; 343.5345, 286.6536, 403.5028, 304.9556, 317.7444, 2…
+$ PV2MATH        &lt;dbl+lbl&gt; 275.4416, 300.2057, 339.3479, 297.6298, 343.1006, 2…
+$ PV3MATH        &lt;dbl+lbl&gt; 296.7530, 302.4781, 332.0848, 276.2681, 368.3675, 2…
+$ PV4MATH        &lt;dbl+lbl&gt; 268.0759, 310.2395, 367.0505, 312.2400, 377.3415, 3…
+$ PV5MATH        &lt;dbl+lbl&gt; 302.2261, 323.1167, 337.8076, 312.4028, 355.3902, 2…
+$ PV6MATH        &lt;dbl+lbl&gt; 223.8903, 252.0338, 345.7264, 317.6691, 367.6002, 2…
+$ PV7MATH        &lt;dbl+lbl&gt; 277.9882, 303.7693, 339.9290, 311.2737, 407.4383, 3…
+$ PV8MATH        &lt;dbl+lbl&gt; 226.1366, 308.2669, 324.9343, 290.1804, 316.5196, 2…
+$ PV9MATH        &lt;dbl+lbl&gt; 277.1788, 287.5130, 393.6886, 321.3118, 406.9493, 3…
+$ PV10MATH       &lt;dbl+lbl&gt; 288.7792, 319.8229, 296.8762, 286.0925, 337.9605, 2…
+$ tratamiento_ia &lt;dbl&gt; 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1…</code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(pisa_analisis<span class="sc">$</span>tratamiento_ia, <span class="at">useNA =</span> <span class="st">"always"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+   0    1 &lt;NA&gt; 
+4338 4121    0 </code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(pisa_analisis<span class="sc">$</span>es_privado, <span class="at">useNA =</span> <span class="st">"always"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Privado Público    &lt;NA&gt; 
+   2145    6314       0 </code></pre>
+</div>
+</div>
+<hr>
+</section>
+<section id="fase-4-analizar-los-datos" class="level2">
+<h2 class="anchored" data-anchor-id="fase-4-analizar-los-datos">Fase 4: Analizar los datos</h2>
+<p>Vamos de lo simple a lo complejo: <strong>estadísticas descriptivas → gráficos univariados → correlación → VIF → modelo base → modelo corregido → modelo por sector</strong>.</p>
+<section id="estadísticas-descriptivas" class="level3">
+<h3 class="anchored" data-anchor-id="estadísticas-descriptivas">4.1 Estadísticas descriptivas</h3>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tabla descriptiva general por sector institucional</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">datasummary</span>(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  (PV1MATH <span class="sc">+</span> uso_ia <span class="sc">+</span> escs <span class="sc">+</span> female) <span class="sc">~</span> es_privado <span class="sc">*</span> (Mean <span class="sc">+</span> SD <span class="sc">+</span> Min <span class="sc">+</span> Max),</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> pisa_analisis,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">2</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Estadísticas Descriptivas por Sector Institucional"</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<!-- preamble start -->
+
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_jhi3on46svfg2uluybpy = TinyTable.createTableFunctions("tinytable_jhi3on46svfg2uluybpy");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '-1', j: 5 } ], css_id: 'tinytable_css_vex3ck87w5pnktgt5kn1',}, 
+          { positions: [ { i: '-1', j: 3 }, { i: '-1', j: 4 }, { i: '-1', j: 7 }, { i: '-1', j: 8 }, { i: '-1', j: 9 } ], css_id: 'tinytable_css_n9tybdai93u5rn8xb7xv',}, 
+          { positions: [ { i: '4', j: 2 }, { i: '4', j: 3 }, { i: '4', j: 4 }, { i: '4', j: 5 }, { i: '4', j: 6 }, { i: '4', j: 7 }, { i: '4', j: 8 }, { i: '4', j: 9 } ], css_id: 'tinytable_css_1f5p8f8dzsxjciwijv19',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '3', j: 4 }, { i: '1', j: 5 }, { i: '2', j: 5 }, { i: '3', j: 5 }, { i: '1', j: 6 }, { i: '2', j: 6 }, { i: '3', j: 6 }, { i: '1', j: 7 }, { i: '2', j: 7 }, { i: '3', j: 7 }, { i: '1', j: 8 }, { i: '2', j: 8 }, { i: '3', j: 8 }, { i: '1', j: 9 }, { i: '2', j: 9 }, { i: '3', j: 9 } ], css_id: 'tinytable_css_g5aqtmu6jj4vzi2t8tbr',}, 
+          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 }, { i: '0', j: 7 }, { i: '0', j: 8 }, { i: '0', j: 9 } ], css_id: 'tinytable_css_06mqrmvjq93xc3dbmzp3',}, 
+          { positions: [ { i: '-1', j: 2 }, { i: '-1', j: 6 } ], css_id: 'tinytable_css_i6u6xwdv9295ql69zku9',}, 
+          { positions: [ { i: '4', j: 1 } ], css_id: 'tinytable_css_o4kvas4vld5omwgkpx40',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 } ], css_id: 'tinytable_css_fovynbnt1vgm1h6ljq00',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_bbx4g309444zemk8ckm3',}, 
+          { positions: [ { i: '-1', j: 1 } ], css_id: 'tinytable_css_pj1369b61cj91n14120u',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_jhi3on46svfg2uluybpy.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
+    <style>
+    /* tinytable css entries after */
+    #tinytable_jhi3on46svfg2uluybpy td.tinytable_css_vex3ck87w5pnktgt5kn1, #tinytable_jhi3on46svfg2uluybpy th.tinytable_css_vex3ck87w5pnktgt5kn1 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.03em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 3%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_jhi3on46svfg2uluybpy td.tinytable_css_n9tybdai93u5rn8xb7xv, #tinytable_jhi3on46svfg2uluybpy th.tinytable_css_n9tybdai93u5rn8xb7xv {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.03em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_jhi3on46svfg2uluybpy td.tinytable_css_1f5p8f8dzsxjciwijv19, #tinytable_jhi3on46svfg2uluybpy th.tinytable_css_1f5p8f8dzsxjciwijv19 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: right }
+    #tinytable_jhi3on46svfg2uluybpy td.tinytable_css_g5aqtmu6jj4vzi2t8tbr, #tinytable_jhi3on46svfg2uluybpy th.tinytable_css_g5aqtmu6jj4vzi2t8tbr { text-align: right }
+    #tinytable_jhi3on46svfg2uluybpy td.tinytable_css_06mqrmvjq93xc3dbmzp3, #tinytable_jhi3on46svfg2uluybpy th.tinytable_css_06mqrmvjq93xc3dbmzp3 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: right }
+    #tinytable_jhi3on46svfg2uluybpy td.tinytable_css_i6u6xwdv9295ql69zku9, #tinytable_jhi3on46svfg2uluybpy th.tinytable_css_i6u6xwdv9295ql69zku9 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.03em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 3%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_jhi3on46svfg2uluybpy td.tinytable_css_o4kvas4vld5omwgkpx40, #tinytable_jhi3on46svfg2uluybpy th.tinytable_css_o4kvas4vld5omwgkpx40 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_jhi3on46svfg2uluybpy td.tinytable_css_fovynbnt1vgm1h6ljq00, #tinytable_jhi3on46svfg2uluybpy th.tinytable_css_fovynbnt1vgm1h6ljq00 { text-align: left }
+    #tinytable_jhi3on46svfg2uluybpy td.tinytable_css_bbx4g309444zemk8ckm3, #tinytable_jhi3on46svfg2uluybpy th.tinytable_css_bbx4g309444zemk8ckm3 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_jhi3on46svfg2uluybpy td.tinytable_css_pj1369b61cj91n14120u, #tinytable_jhi3on46svfg2uluybpy th.tinytable_css_pj1369b61cj91n14120u {  position: relative; --border-bottom: 0; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    </style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_jhi3on46svfg2uluybpy" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <caption>Estadísticas Descriptivas por Sector Institucional</caption>
+        <thead>
+<tr>
+<th scope="col" align="center" colspan="1" data-row="-1" data-col="1"> </th>
+<th scope="col" align="center" colspan="4" data-row="-1" data-col="2">Privado</th>
+<th scope="col" align="center" colspan="4" data-row="-1" data-col="6">Público</th>
+</tr>
+              <tr>
+                <th scope="col" data-row="0" data-col="1"> </th>
+                <th scope="col" data-row="0" data-col="2">Mean</th>
+                <th scope="col" data-row="0" data-col="3">SD</th>
+                <th scope="col" data-row="0" data-col="4">Min</th>
+                <th scope="col" data-row="0" data-col="5">Max</th>
+                <th scope="col" data-row="0" data-col="6">Mean</th>
+                <th scope="col" data-row="0" data-col="7">SD</th>
+                <th scope="col" data-row="0" data-col="8">Min</th>
+                <th scope="col" data-row="0" data-col="9">Max</th>
+              </tr>
+        </thead>
+        
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="1">Plausible Value 1 in Mathematics</td>
+                  <td data-row="1" data-col="2">407.46</td>
+                  <td data-row="1" data-col="3">64.36</td>
+                  <td data-row="1" data-col="4">165.06</td>
+                  <td data-row="1" data-col="5">607.18</td>
+                  <td data-row="1" data-col="6">361.90</td>
+                  <td data-row="1" data-col="7">59.01</td>
+                  <td data-row="1" data-col="8">159.43</td>
+                  <td data-row="1" data-col="9">569.48</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1">Students' AI use at school (WLE)</td>
+                  <td data-row="2" data-col="2">0.45</td>
+                  <td data-row="2" data-col="3">0.92</td>
+                  <td data-row="2" data-col="4">-1.58</td>
+                  <td data-row="2" data-col="5">2.34</td>
+                  <td data-row="2" data-col="6">0.24</td>
+                  <td data-row="2" data-col="7">0.98</td>
+                  <td data-row="2" data-col="8">-1.58</td>
+                  <td data-row="2" data-col="9">2.34</td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="1">Economic, Social and Cultural Status Index</td>
+                  <td data-row="3" data-col="2">-0.17</td>
+                  <td data-row="3" data-col="3">1.01</td>
+                  <td data-row="3" data-col="4">-3.56</td>
+                  <td data-row="3" data-col="5">2.52</td>
+                  <td data-row="3" data-col="6">-1.23</td>
+                  <td data-row="3" data-col="7">0.96</td>
+                  <td data-row="3" data-col="8">-4.92</td>
+                  <td data-row="3" data-col="9">1.82</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="1">female</td>
+                  <td data-row="4" data-col="2">0.53</td>
+                  <td data-row="4" data-col="3">0.50</td>
+                  <td data-row="4" data-col="4">0.00</td>
+                  <td data-row="4" data-col="5">1.00</td>
+                  <td data-row="4" data-col="6">0.50</td>
+                  <td data-row="4" data-col="7">0.50</td>
+                  <td data-row="4" data-col="8">0.00</td>
+                  <td data-row="4" data-col="9">1.00</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+</div>
+</section>
+<section id="gráficos-univariados-distribución-de-variables" class="level3">
+<h3 class="anchored" data-anchor-id="gráficos-univariados-distribución-de-variables">4.2 Gráficos univariados (distribución de variables)</h3>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Distribución del rendimiento en matemáticas por sector</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(pisa_analisis, <span class="fu">aes</span>(<span class="at">x =</span> PV1MATH, <span class="at">fill =</span> es_privado)) <span class="sc">+</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Público"</span> <span class="ot">=</span> <span class="st">"#2b5c8f"</span>, <span class="st">"Privado"</span> <span class="ot">=</span> <span class="st">"#d95f02"</span>)) <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribución del Rendimiento en Matemáticas"</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Puntaje PV1MATH"</span>, <span class="at">y =</span> <span class="st">"Densidad"</span>, <span class="at">fill =</span> <span class="st">"Sector"</span>) <span class="sc">+</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>g1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Found more than one class "haven_labelled" in cache; using the first, from namespace 'haven'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Also defined by 'memisc'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="PISA_2025_files/figure-html/grafico-distribucion-rendimiento-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Distribución del uso de IA por sector</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>g2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(pisa_analisis, <span class="fu">aes</span>(<span class="at">x =</span> uso_ia, <span class="at">fill =</span> es_privado)) <span class="sc">+</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Público"</span> <span class="ot">=</span> <span class="st">"#2b5c8f"</span>, <span class="st">"Privado"</span> <span class="ot">=</span> <span class="st">"#d95f02"</span>)) <span class="sc">+</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribución del Uso de IA"</span>,</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Índice de Uso (SD)"</span>, <span class="at">y =</span> <span class="st">"Densidad"</span>, <span class="at">fill =</span> <span class="st">"Sector"</span>) <span class="sc">+</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>g2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="PISA_2025_files/figure-html/grafico-distribucion-uso-ia-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Relación bivariada preliminar (scatter + suavizado LOESS), sin ajuste econométrico</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>g3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(pisa_analisis, <span class="fu">aes</span>(<span class="at">x =</span> uso_ia, <span class="at">y =</span> PV1MATH, <span class="at">color =</span> es_privado)) <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.1</span>, <span class="at">size =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"loess"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">linewidth =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Público"</span> <span class="ot">=</span> <span class="st">"#2b5c8f"</span>, <span class="st">"Privado"</span> <span class="ot">=</span> <span class="st">"#d95f02"</span>)) <span class="sc">+</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Correlación Suavizada (LOESS) Sin Ajuste Econométrico"</span>,</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Uso de IA"</span>, <span class="at">y =</span> <span class="st">"Puntaje Matemáticas"</span>, <span class="at">color =</span> <span class="st">"Sector"</span>) <span class="sc">+</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>g3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="PISA_2025_files/figure-html/grafico-bivariado-exploratorio-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Vista combinada de los tres gráficos anteriores (solo para reporte final)</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>(g1 <span class="sc">+</span> g2) <span class="sc">/</span> g3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Found more than one class "haven_labelled" in cache; using the first, from namespace 'haven'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Also defined by 'memisc'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="PISA_2025_files/figure-html/grafico-univariados-combinado-1.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="matriz-de-correlación" class="level3">
+<h3 class="anchored" data-anchor-id="matriz-de-correlación">4.3 Matriz de correlación</h3>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleccionar variables numéricas de interés</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>vars_cor <span class="ot">&lt;-</span> pisa_analisis <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(PV1MATH, uso_ia, escs, female) <span class="sc">%&gt;%</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>()</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcular matriz de correlación</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>matriz_cor <span class="ot">&lt;-</span> <span class="fu">cor</span>(vars_cor)</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(matriz_cor, <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>        PV1MATH uso_ia  escs female
+PV1MATH    1.00   0.10  0.40  -0.11
+uso_ia     0.10   1.00  0.13  -0.02
+escs       0.40   0.13  1.00  -0.04
+female    -0.11  -0.02 -0.04   1.00</code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualizar como mapa de calor con ggplot2</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>matriz_cor_long <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(matriz_cor) <span class="sc">%&gt;%</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>(<span class="st">"var1"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>var1, <span class="at">names_to =</span> <span class="st">"var2"</span>, <span class="at">values_to =</span> <span class="st">"correlacion"</span>)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(matriz_cor_long, <span class="fu">aes</span>(<span class="at">x =</span> var1, <span class="at">y =</span> var2, <span class="at">fill =</span> correlacion)) <span class="sc">+</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(correlacion, <span class="dv">2</span>)), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"#d95f02"</span>, <span class="at">mid =</span> <span class="st">"white"</span>, <span class="at">high =</span> <span class="st">"#2b5c8f"</span>, <span class="at">midpoint =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Matriz de Correlación"</span>, <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span>, <span class="at">fill =</span> <span class="st">"r"</span>) <span class="sc">+</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="PISA_2025_files/figure-html/matriz-correlacion-1.png" class="img-fluid figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="diagnóstico-de-multicolinealidad-vif" class="level3">
+<h3 class="anchored" data-anchor-id="diagnóstico-de-multicolinealidad-vif">4.4 Diagnóstico de multicolinealidad (VIF)</h3>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajustamos un modelo lineal auxiliar (lm) solo para calcular el VIF,</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ya que car::vif() no admite directamente objetos feols</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>modelo_vif <span class="ot">&lt;-</span> <span class="fu">lm</span>(PV1MATH <span class="sc">~</span> uso_ia <span class="sc">+</span> escs <span class="sc">+</span> female, <span class="at">data =</span> pisa_analisis)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(modelo_vif)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  uso_ia     escs   female 
+1.016324 1.017608 1.001604 </code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Regla práctica: VIF &gt; 5 (o &gt; 10) sugiere multicolinealidad preocupante</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="balanceo-de-muestra-mediante-psm-propensity-score-matching" class="level3">
+<h3 class="anchored" data-anchor-id="balanceo-de-muestra-mediante-psm-propensity-score-matching">4.5 Balanceo de muestra mediante PSM (Propensity Score Matching)</h3>
+<p>Dado que los estudiantes con mayor <code>escs</code> tienden a usar más tecnología, emparejamos a los estudiantes tratados y de control usando <code>MatchIt</code> antes de estimar el modelo:</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Emparejamiento 1:1 por propensity score</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>psm_model <span class="ot">&lt;-</span> <span class="fu">matchit</span>(</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  tratamiento_ia <span class="sc">~</span> escs <span class="sc">+</span> female,</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> pisa_analisis,</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"nearest"</span>,</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">caliper =</span> <span class="fl">0.1</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Dataset emparejado y balanceado</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>df_match <span class="ot">&lt;-</span> <span class="fu">match.data</span>(psm_model)</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Verificar balance de covariables tras el emparejamiento</span></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(psm_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+matchit(formula = tratamiento_ia ~ escs + female, data = pisa_analisis, 
+    method = "nearest", caliper = 0.1)
+
+Summary of Balance for All Data:
+         Means Treated Means Control Std. Mean Diff. Var. Ratio eCDF Mean
+distance        0.4939        0.4808          0.2283     1.0269    0.0650
+escs           -0.8334       -1.0765          0.2264     1.0120    0.0646
+female          0.4953        0.5173         -0.0440          .    0.0220
+         eCDF Max
+distance   0.1000
+escs       0.1047
+female     0.0220
+
+Summary of Balance for Matched Data:
+         Means Treated Means Control Std. Mean Diff. Var. Ratio eCDF Mean
+distance        0.4902        0.4876          0.0449     1.0755    0.0108
+escs           -0.9021       -0.9504          0.0450     1.0552    0.0114
+female          0.5014        0.5042         -0.0057          .    0.0028
+         eCDF Max Std. Pair Dist.
+distance   0.0281          0.0452
+escs       0.0306          0.1720
+female     0.0028          0.9411
+
+Sample Sizes:
+          Control Treated
+All          4338    4121
+Matched      3883    3883
+Unmatched     455     238
+Discarded       0       0</code></pre>
+</div>
+</div>
+</section>
+<section id="modelo-base-sin-corregir" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-base-sin-corregir">4.6 Modelo base (sin corregir)</h3>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># OLS simple: efecto del tratamiento (alto vs. bajo uso de IA) sin efectos fijos</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">feols</span>(PV1MATH <span class="sc">~</span> tratamiento_ia <span class="sc">+</span> escs <span class="sc">+</span> female,</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> df_match, <span class="at">weights =</span> <span class="sc">~</span>w_fstu)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>OLS estimation, Dep. Var.: PV1MATH
+Observations: 7,766
+Weights: w_fstu
+Standard-errors: IID 
+                Estimate Std. Error   t value   Pr(&gt;|t|)    
+(Intercept)    395.64499   1.296336 305.20242  &lt; 2.2e-16 ***
+tratamiento_ia   9.41799   1.316480   7.15392 9.2022e-13 ***
+escs            24.38622   0.619181  39.38463  &lt; 2.2e-16 ***
+female         -11.71496   1.316370  -8.89944  &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 58.0   Adj. R2: 0.179501</code></pre>
+</div>
+</div>
+</section>
+<section id="modelo-corregido-efectos-fijos-errores-agrupados-por-colegio" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-corregido-efectos-fijos-errores-agrupados-por-colegio">4.7 Modelo corregido (efectos fijos + errores agrupados por colegio)</h3>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Se agregan efectos fijos de colegio y errores estándar agrupados (cluster)</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co"># por school_id, para no atribuir a la IA variación explicada por el colegio</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">feols</span>(PV1MATH <span class="sc">~</span> tratamiento_ia <span class="sc">+</span> escs <span class="sc">+</span> female <span class="sc">|</span> school_id,</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> df_match, <span class="at">weights =</span> <span class="sc">~</span>w_fstu, <span class="at">cluster =</span> <span class="sc">~</span>school_id)</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparación lado a lado del modelo base vs. corregido</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="st">"Modelo base (OLS)"</span> <span class="ot">=</span> m1, <span class="st">"Modelo corregido (Efectos Fijos)"</span> <span class="ot">=</span> m2),</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">stars =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">gof_omit =</span> <span class="st">"IC|Log|F"</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<!-- preamble start -->
+
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_lojv5fszk7ylrn8ljeh5 = TinyTable.createTableFunctions("tinytable_lojv5fszk7ylrn8ljeh5");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '14', j: 2 }, { i: '14', j: 3 } ], css_id: 'tinytable_css_03kbbjqc3k4890e7hwsq',}, 
+          { positions: [ { i: '8', j: 2 }, { i: '8', j: 3 } ], css_id: 'tinytable_css_y6k6cyb18m9ghtydra7c',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 }, { i: '11', j: 3 }, { i: '12', j: 3 }, { i: '13', j: 3 } ], css_id: 'tinytable_css_lzmppiy7z4yod68quegl',}, 
+          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_jts7e9gjt1z3g17ywi75',}, 
+          { positions: [ { i: '14', j: 1 } ], css_id: 'tinytable_css_ub1vimx1fk9pdtf514hu',}, 
+          { positions: [ { i: '8', j: 1 } ], css_id: 'tinytable_css_vc29l15lex05lea4kyrj',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 } ], css_id: 'tinytable_css_qwwxnuddn59dij25i3ei',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_w0g7u8nrydezrljdjnp5',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_lojv5fszk7ylrn8ljeh5.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
+    <style>
+    /* tinytable css entries after */
+    #tinytable_lojv5fszk7ylrn8ljeh5 td.tinytable_css_03kbbjqc3k4890e7hwsq, #tinytable_lojv5fszk7ylrn8ljeh5 th.tinytable_css_03kbbjqc3k4890e7hwsq {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_lojv5fszk7ylrn8ljeh5 td.tinytable_css_y6k6cyb18m9ghtydra7c, #tinytable_lojv5fszk7ylrn8ljeh5 th.tinytable_css_y6k6cyb18m9ghtydra7c {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_lojv5fszk7ylrn8ljeh5 td.tinytable_css_lzmppiy7z4yod68quegl, #tinytable_lojv5fszk7ylrn8ljeh5 th.tinytable_css_lzmppiy7z4yod68quegl { text-align: center }
+    #tinytable_lojv5fszk7ylrn8ljeh5 td.tinytable_css_jts7e9gjt1z3g17ywi75, #tinytable_lojv5fszk7ylrn8ljeh5 th.tinytable_css_jts7e9gjt1z3g17ywi75 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_lojv5fszk7ylrn8ljeh5 td.tinytable_css_ub1vimx1fk9pdtf514hu, #tinytable_lojv5fszk7ylrn8ljeh5 th.tinytable_css_ub1vimx1fk9pdtf514hu {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_lojv5fszk7ylrn8ljeh5 td.tinytable_css_vc29l15lex05lea4kyrj, #tinytable_lojv5fszk7ylrn8ljeh5 th.tinytable_css_vc29l15lex05lea4kyrj {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_lojv5fszk7ylrn8ljeh5 td.tinytable_css_qwwxnuddn59dij25i3ei, #tinytable_lojv5fszk7ylrn8ljeh5 th.tinytable_css_qwwxnuddn59dij25i3ei { text-align: left }
+    #tinytable_lojv5fszk7ylrn8ljeh5 td.tinytable_css_w0g7u8nrydezrljdjnp5, #tinytable_lojv5fszk7ylrn8ljeh5 th.tinytable_css_w0g7u8nrydezrljdjnp5 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    </style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_lojv5fszk7ylrn8ljeh5" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        
+        <thead>
+              <tr>
+                <th scope="col" data-row="0" data-col="1"> </th>
+                <th scope="col" data-row="0" data-col="2">Modelo base (OLS)</th>
+                <th scope="col" data-row="0" data-col="3">Modelo corregido (Efectos Fijos)</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan="3">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="1">(Intercept)</td>
+                  <td data-row="1" data-col="2">395.645***</td>
+                  <td data-row="1" data-col="3"></td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1"></td>
+                  <td data-row="2" data-col="2">(1.296)</td>
+                  <td data-row="2" data-col="3"></td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="1">tratamiento_ia</td>
+                  <td data-row="3" data-col="2">9.418***</td>
+                  <td data-row="3" data-col="3">6.146***</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="1"></td>
+                  <td data-row="4" data-col="2">(1.316)</td>
+                  <td data-row="4" data-col="3">(1.319)</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="1">escs</td>
+                  <td data-row="5" data-col="2">24.386***</td>
+                  <td data-row="5" data-col="3">8.757***</td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="1"></td>
+                  <td data-row="6" data-col="2">(0.619)</td>
+                  <td data-row="6" data-col="3">(0.852)</td>
+                </tr>
+                <tr>
+                  <td data-row="7" data-col="1">female</td>
+                  <td data-row="7" data-col="2">-11.715***</td>
+                  <td data-row="7" data-col="3">-14.408***</td>
+                </tr>
+                <tr>
+                  <td data-row="8" data-col="1"></td>
+                  <td data-row="8" data-col="2">(1.316)</td>
+                  <td data-row="8" data-col="3">(1.433)</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="1">Num.Obs.</td>
+                  <td data-row="9" data-col="2">7766</td>
+                  <td data-row="9" data-col="3">7765</td>
+                </tr>
+                <tr>
+                  <td data-row="10" data-col="1">R2</td>
+                  <td data-row="10" data-col="2">0.180</td>
+                  <td data-row="10" data-col="3">0.377</td>
+                </tr>
+                <tr>
+                  <td data-row="11" data-col="1">R2 Adj.</td>
+                  <td data-row="11" data-col="2">0.180</td>
+                  <td data-row="11" data-col="3">0.355</td>
+                </tr>
+                <tr>
+                  <td data-row="12" data-col="1">R2 Within</td>
+                  <td data-row="12" data-col="2"></td>
+                  <td data-row="12" data-col="3">0.042</td>
+                </tr>
+                <tr>
+                  <td data-row="13" data-col="1">R2 Within Adj.</td>
+                  <td data-row="13" data-col="2"></td>
+                  <td data-row="13" data-col="3">0.041</td>
+                </tr>
+                <tr>
+                  <td data-row="14" data-col="1">RMSE</td>
+                  <td data-row="14" data-col="2">58.02</td>
+                  <td data-row="14" data-col="3">50.86</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+</div>
+</section>
+<section id="modelo-no-lineal-robusto-a-los-10-valores-plausibles-pvs" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-no-lineal-robusto-a-los-10-valores-plausibles-pvs">4.8 Modelo no lineal, robusto a los 10 valores plausibles (PVs)</h3>
+<p>PISA reporta 10 valores plausibles del desempeño (en vez de un solo puntaje) para representar la incertidumbre de la medición. Estimamos el modelo cuadrático en cada uno y promediamos los coeficientes:</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>pvs <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"PV"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="st">"MATH"</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>modelos_pvs <span class="ot">&lt;-</span> <span class="fu">lapply</span>(pvs, <span class="cf">function</span>(pv) {</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  formula <span class="ot">&lt;-</span> <span class="fu">as.formula</span>(<span class="fu">paste</span>(pv, <span class="st">"~ uso_ia + I(uso_ia^2) + escs + female | school_id"</span>))</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">feols</span>(formula, <span class="at">data =</span> df_match, <span class="at">weights =</span> <span class="sc">~</span>w_fstu, <span class="at">cluster =</span> <span class="sc">~</span>school_id)</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Promediar coeficientes de los 10 modelos (uno por cada PV)</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>coef_promedio <span class="ot">&lt;-</span> <span class="fu">rowMeans</span>(<span class="fu">sapply</span>(modelos_pvs, coef))</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(coef_promedio)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>        uso_ia I(I(uso_ia^2))           escs         female 
+      4.380787      -2.558114       8.797842     -14.867501 </code></pre>
+</div>
+</div>
+</section>
+<section id="modelo-comparado-sector-público-vs.-privado" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-comparado-sector-público-vs.-privado">4.9 Modelo comparado: sector Público vs.&nbsp;Privado</h3>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimar los 10 PVs por separado para cada sector institucional</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>modelos_publico <span class="ot">&lt;-</span> <span class="fu">lapply</span>(pvs, <span class="cf">function</span>(pv) {</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">feols</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(pv, <span class="st">"~ uso_ia + I(uso_ia^2) + escs + female"</span>)),</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> <span class="fu">filter</span>(df_match, es_privado <span class="sc">==</span> <span class="st">"Público"</span>), <span class="at">weights =</span> <span class="sc">~</span>w_fstu)</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>modelos_privado <span class="ot">&lt;-</span> <span class="fu">lapply</span>(pvs, <span class="cf">function</span>(pv) {</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">feols</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(pv, <span class="st">"~ uso_ia + I(uso_ia^2) + escs + female"</span>)),</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> <span class="fu">filter</span>(df_match, es_privado <span class="sc">==</span> <span class="st">"Privado"</span>), <span class="at">weights =</span> <span class="sc">~</span>w_fstu)</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Promediar coeficientes por sector</span></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>coef_pub  <span class="ot">&lt;-</span> <span class="fu">rowMeans</span>(<span class="fu">sapply</span>(modelos_publico, coef))</span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>coef_priv <span class="ot">&lt;-</span> <span class="fu">rowMeans</span>(<span class="fu">sapply</span>(modelos_privado, coef))</span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(coef_pub)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   (Intercept)         uso_ia I(I(uso_ia^2))           escs         female 
+    382.959576       5.321603      -3.490134      14.279841     -11.754089 </code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(coef_priv)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   (Intercept)         uso_ia I(I(uso_ia^2))           escs         female 
+    425.046865      10.176145      -4.633141      24.543148     -18.123771 </code></pre>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="fase-5-compartir-los-resultados-mediante-visualización" class="level2">
+<h2 class="anchored" data-anchor-id="fase-5-compartir-los-resultados-mediante-visualización">Fase 5: Compartir los resultados mediante visualización</h2>
+<section id="boxplot-rendimiento-por-nivel-de-uso-de-ia-tratamiento" class="level3">
+<h3 class="anchored" data-anchor-id="boxplot-rendimiento-por-nivel-de-uso-de-ia-tratamiento">5.1 Boxplot: rendimiento por nivel de uso de IA (tratamiento)</h3>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_match, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(tratamiento_ia, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Bajo Uso IA"</span>, <span class="st">"Alto Uso IA"</span>)),</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">y =</span> PV1MATH, <span class="at">fill =</span> <span class="fu">factor</span>(tratamiento_ia))) <span class="sc">+</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#2b5c8f"</span>, <span class="st">"#d95f02"</span>)) <span class="sc">+</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Distribución del Rendimiento en Matemáticas por Uso de IA"</span>,</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Muestra balanceada por estatus socioeconómico (PSM)"</span>,</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Nivel de Uso de Herramientas de IA"</span>,</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Puntaje Plausible en Matemáticas (PV1MATH)"</span></span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="PISA_2025_files/figure-html/grafico-boxplot-tratamiento-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="boxplot-rendimiento-por-cuartil-de-intensidad-de-uso" class="level3">
+<h3 class="anchored" data-anchor-id="boxplot-rendimiento-por-cuartil-de-intensidad-de-uso">5.2 Boxplot: rendimiento por cuartil de intensidad de uso</h3>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_match, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(uso_ia_cuartil), <span class="at">y =</span> PV1MATH, <span class="at">fill =</span> <span class="fu">factor</span>(uso_ia_cuartil))) <span class="sc">+</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Blues"</span>) <span class="sc">+</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Efecto No Lineal del Uso de IA en Matemáticas"</span>,</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Comparación por cuartiles de intensidad de uso"</span>,</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Cuartiles de Uso de IA (1: Bajo / 4: Muy Alto)"</span>,</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Puntaje Plausible en Matemáticas"</span></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="PISA_2025_files/figure-html/grafico-boxplot-cuartiles-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="curva-en-u-invertida-y-punto-óptimo-de-uso" class="level3">
+<h3 class="anchored" data-anchor-id="curva-en-u-invertida-y-punto-óptimo-de-uso">5.3 Curva en U invertida y punto óptimo de uso</h3>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Extracción segura de coeficientes</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>b1 <span class="ot">&lt;-</span> coef_promedio[<span class="st">"uso_ia"</span>]</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Se busca el coeficiente cuadrático probando las dos formas en que fixest nombra la variable</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>b2 <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="st">"I(I(uso_ia^2))"</span> <span class="sc">%in%</span> <span class="fu">names</span>(coef_promedio)) {</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  coef_promedio[<span class="st">"I(I(uso_ia^2))"</span>]</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  coef_promedio[<span class="st">"I(uso_ia^2)"</span>]</span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Cálculo del punto óptimo</span></span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>optimo <span class="ot">&lt;-</span> <span class="sc">-</span>b1 <span class="sc">/</span> (<span class="dv">2</span> <span class="sc">*</span> b2)</span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Malla de valores de uso de IA para la predicción</span></span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>grid_ia   <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(df_match<span class="sc">$</span>uso_ia), <span class="fu">max</span>(df_match<span class="sc">$</span>uso_ia), <span class="at">length.out =</span> <span class="dv">100</span>)</span>
+<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a>base_y    <span class="ot">&lt;-</span> <span class="fu">mean</span>(df_match<span class="sc">$</span>PV1MATH, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a>pred_pisa <span class="ot">&lt;-</span> base_y <span class="sc">+</span> (b1 <span class="sc">*</span> grid_ia) <span class="sc">+</span> (b2 <span class="sc">*</span> (grid_ia<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a>df_curva <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">uso_ia =</span> grid_ia, <span class="at">pv_pred =</span> pred_pisa)</span>
+<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-21"><a href="#cb45-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Gráfico con ggplot2</span></span>
+<span id="cb45-22"><a href="#cb45-22" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_curva, <span class="fu">aes</span>(<span class="at">x =</span> uso_ia, <span class="at">y =</span> pv_pred)) <span class="sc">+</span></span>
+<span id="cb45-23"><a href="#cb45-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"#2b5c8f"</span>, <span class="at">linewidth =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb45-24"><a href="#cb45-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> optimo, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"#d95f02"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb45-25"><a href="#cb45-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> optimo <span class="sc">+</span> <span class="fl">0.4</span>, <span class="at">y =</span> <span class="fu">min</span>(df_curva<span class="sc">$</span>pv_pred) <span class="sc">+</span> <span class="dv">2</span>,</span>
+<span id="cb45-26"><a href="#cb45-26" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> <span class="fu">paste0</span>(<span class="st">"Punto Óptimo: "</span>, <span class="fu">round</span>(optimo, <span class="dv">2</span>), <span class="st">" SD"</span>), <span class="at">color =</span> <span class="st">"#d95f02"</span>) <span class="sc">+</span></span>
+<span id="cb45-27"><a href="#cb45-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb45-28"><a href="#cb45-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Curva en U Invertida: Rendimientos Decrecientes del Uso de IA"</span>,</span>
+<span id="cb45-29"><a href="#cb45-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Promedio sobre 10 Valores Plausibles (PISA) con Efectos Fijos"</span>,</span>
+<span id="cb45-30"><a href="#cb45-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Intensidad de Uso de IA (Estandarizado)"</span>,</span>
+<span id="cb45-31"><a href="#cb45-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Puntaje Predicho en Matemáticas"</span></span>
+<span id="cb45-32"><a href="#cb45-32" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb45-33"><a href="#cb45-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="PISA_2025_files/figure-html/grafico-curva-u-invertida-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="comparación-del-efecto-sector-público-vs.-privado" class="level3">
+<h3 class="anchored" data-anchor-id="comparación-del-efecto-sector-público-vs.-privado">5.4 Comparación del efecto: sector Público vs.&nbsp;Privado</h3>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Extracción segura de los coeficientes cuadráticos para cada sector</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>b2_pub <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="st">"I(I(uso_ia^2))"</span> <span class="sc">%in%</span> <span class="fu">names</span>(coef_pub)) {</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  coef_pub[<span class="st">"I(I(uso_ia^2))"</span>]</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  coef_pub[<span class="st">"I(uso_ia^2)"</span>]</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>b2_priv <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="st">"I(I(uso_ia^2))"</span> <span class="sc">%in%</span> <span class="fu">names</span>(coef_priv)) {</span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>  coef_priv[<span class="st">"I(I(uso_ia^2))"</span>]</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>  coef_priv[<span class="st">"I(uso_ia^2)"</span>]</span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Generación de la malla de valores y cálculo de medias base</span></span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a>grid_ia <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(df_match<span class="sc">$</span>uso_ia), <span class="fu">max</span>(df_match<span class="sc">$</span>uso_ia), <span class="at">length.out =</span> <span class="dv">100</span>)</span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a>base_pub  <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">filter</span>(df_match, es_privado <span class="sc">==</span> <span class="st">"Público"</span>)<span class="sc">$</span>PV1MATH, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a>base_priv <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">filter</span>(df_match, es_privado <span class="sc">==</span> <span class="st">"Privado"</span>)<span class="sc">$</span>PV1MATH, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Construcción del dataset comparativo</span></span>
+<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a>df_comparativo <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">uso_ia  =</span> grid_ia,</span>
+<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">pv_pred =</span> base_pub <span class="sc">+</span> (coef_pub[<span class="st">"uso_ia"</span>] <span class="sc">*</span> grid_ia) <span class="sc">+</span> (b2_pub <span class="sc">*</span> (grid_ia<span class="sc">^</span><span class="dv">2</span>)),</span>
+<span id="cb46-25"><a href="#cb46-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">Sector  =</span> <span class="st">"Público"</span></span>
+<span id="cb46-26"><a href="#cb46-26" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb46-27"><a href="#cb46-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb46-28"><a href="#cb46-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">uso_ia  =</span> grid_ia,</span>
+<span id="cb46-29"><a href="#cb46-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">pv_pred =</span> base_priv <span class="sc">+</span> (coef_priv[<span class="st">"uso_ia"</span>] <span class="sc">*</span> grid_ia) <span class="sc">+</span> (b2_priv <span class="sc">*</span> (grid_ia<span class="sc">^</span><span class="dv">2</span>)),</span>
+<span id="cb46-30"><a href="#cb46-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">Sector  =</span> <span class="st">"Privado"</span></span>
+<span id="cb46-31"><a href="#cb46-31" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb46-32"><a href="#cb46-32" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb46-33"><a href="#cb46-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-34"><a href="#cb46-34" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Gráfico comparativo final</span></span>
+<span id="cb46-35"><a href="#cb46-35" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_comparativo, <span class="fu">aes</span>(<span class="at">x =</span> uso_ia, <span class="at">y =</span> pv_pred, <span class="at">color =</span> Sector)) <span class="sc">+</span></span>
+<span id="cb46-36"><a href="#cb46-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb46-37"><a href="#cb46-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Público"</span> <span class="ot">=</span> <span class="st">"#2b5c8f"</span>, <span class="st">"Privado"</span> <span class="ot">=</span> <span class="st">"#d95f02"</span>)) <span class="sc">+</span></span>
+<span id="cb46-38"><a href="#cb46-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb46-39"><a href="#cb46-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Efecto Diferencial del Uso de IA: Sector Público vs. Privado"</span>,</span>
+<span id="cb46-40"><a href="#cb46-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Predicción cuadrática promediada sobre 10 Valores Plausibles"</span>,</span>
+<span id="cb46-41"><a href="#cb46-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Intensidad de Uso de IA (Estandarizado)"</span>,</span>
+<span id="cb46-42"><a href="#cb46-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Puntaje Predicho en Matemáticas"</span>,</span>
+<span id="cb46-43"><a href="#cb46-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Sostenimiento"</span></span>
+<span id="cb46-44"><a href="#cb46-44" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb46-45"><a href="#cb46-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="PISA_2025_files/figure-html/grafico-comparativo-sector-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

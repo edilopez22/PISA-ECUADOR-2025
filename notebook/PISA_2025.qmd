@@ -435,8 +435,8 @@ b2 <- if ("I(I(uso_ia^2))" %in% names(coef_promedio)) {
 optimo <- -b1 / (2 * b2)
 
 # 3. Malla de valores de uso de IA para la predicción
-grid_ia   <- seq(min(df_match_robusto$uso_ia), max(df_match_robusto$uso_ia), length.out = 100)
-base_y    <- mean(df_match_robusto$PV1MATH, na.rm = TRUE)
+grid_ia   <- seq(min(df_match$uso_ia), max(df_match$uso_ia), length.out = 100)
+base_y    <- mean(df_match$PV1MATH, na.rm = TRUE)
 pred_pisa <- base_y + (b1 * grid_ia) + (b2 * (grid_ia^2))
 
 df_curva <- data.frame(uso_ia = grid_ia, pv_pred = pred_pisa)
@@ -477,10 +477,10 @@ b2_priv <- if ("I(I(uso_ia^2))" %in% names(coef_priv)) {
 }
 
 # 2. Generación de la malla de valores y cálculo de medias base
-grid_ia <- seq(min(pisa_tipo_colegio$uso_ia), max(pisa_tipo_colegio$uso_ia), length.out = 100)
+grid_ia <- seq(min(df_match$uso_ia), max(df_match$uso_ia), length.out = 100)
 
-base_pub  <- mean(filter(pisa_tipo_colegio, es_privado == "Público")$PV1MATH, na.rm = TRUE)
-base_priv <- mean(filter(pisa_tipo_colegio, es_privado == "Privado")$PV1MATH, na.rm = TRUE)
+base_pub  <- mean(filter(df_match, es_privado == "Público")$PV1MATH, na.rm = TRUE)
+base_priv <- mean(filter(df_match, es_privado == "Privado")$PV1MATH, na.rm = TRUE)
 
 # 3. Construcción del dataset comparativo
 df_comparativo <- bind_rows(
