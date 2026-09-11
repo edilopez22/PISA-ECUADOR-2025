@@ -148,6 +148,19 @@ table(pisa_analisis$tratamiento_ia, useNA = "always")
 table(pisa_analisis$es_privado, useNA = "always")
 ```
 
+```{r}
+#| label: promedio-oficial-ponderado
+
+# Promedio oficial ponderado (todos los estudiantes, antes de tu filtro)
+library(intsvy)
+
+pisa.mean.pv(
+  pvlabel = paste0("PV", 1:10, "MATH"),
+  by = NULL,
+  data = pisa_completa   # base sin el drop_na
+)
+```
+
 ------------------------------------------------------------------------
 
 ## Fase 4: Analizar los datos
@@ -159,31 +172,111 @@ Vamos de lo simple a lo complejo: **estadísticas descriptivas → gráficos uni
 ```{r}
 #| label: estadisticas-descriptivas
 
-# Tabla descriptiva general por sector institucional
-datasummary(
-  (PV1MATH + uso_ia + escs + female) ~ es_privado * (Mean + SD + Min + Max),
-  data = pisa_analisis,
-  fmt = 2,
-  title = "Estadísticas Descriptivas por Sector Institucional"
+# intsvy necesita la columna de peso con el nombre estándar W_FSTUWT
+pisa_analisis <- pisa_analisis %>%
+  mutate(W_FSTUWT = w_fstu)
+
+# 1. Promedio nacional oficial (todos los estudiantes, comparable con INEVAL/OCDE)
+cat("Promedio Nacional (muestra completa):\n")
+pisa.mean.pv(
+  pvlabel = paste0("PV", 1:10, "MATH"),
+  by = NULL,
+  data = pisa_completa
+)
+
+# 2. Promedio de la muestra analítica (solo estudiantes con datos de uso de IA)
+cat("\nPromedio de la Muestra Analítica (con datos de uso de IA):\n")
+pisa.mean.pv(
+  pvlabel = paste0("PV", 1:10, "MATH"),
+  by = NULL,
+  data = pisa_analisis
+)
+
+# 3. Muestra analítica, desagregada por sector institucional
+cat("\nMuestra Analítica por Sector Institucional:\n")
+pisa.mean.pv(
+  pvlabel = paste0("PV", 1:10, "MATH"),
+  by = "es_privado",
+  data = pisa_analisis
 )
 ```
 
 ### 4.2 Gráficos univariados (distribución de variables)
 
 ```{r}
+#| label: grafico-puntaje-cobertura-muestra
+#| fig.width: 6
+#| fig.height: 4
+
+# Guardamos los resultados de intsvy (no solo los imprimimos)
+res_nacional  <- pisa.mean.pv(pvlabel = paste0("PV", 1:10, "MATH"), by = NULL, data = pisa_completa)
+res_analitica <- pisa.mean.pv(pvlabel = paste0("PV", 1:10, "MATH"), by = NULL, data = pisa_analisis)
+
+df_puntaje_muestra <- data.frame(
+  grupo = c("Total de Estudiantes\n(Ecuador, PISA 2025)", "Con Datos de Uso de IA\n(Muestra Analítica)"),
+  mean  = c(res_nacional$Mean, res_analitica$Mean),
+  se    = c(res_nacional$s.e., res_analitica$s.e.)
+)
+
+g_cobertura <- ggplot(df_puntaje_muestra, aes(x = grupo, y = mean, fill = grupo)) +
+  geom_col(width = 0.55, show.legend = FALSE) +
+  geom_errorbar(aes(ymin = mean - 1.96 * se, ymax = mean + 1.96 * se), width = 0.15) +
+  geom_text(aes(label = round(mean, 0)), vjust = -1.8, size = 5, fontface = "bold") +
+  scale_fill_manual(values = c("#94a3b8", "#2b5c8f")) +
+  coord_cartesian(ylim = c(min(df_puntaje_muestra$mean) - 20, max(df_puntaje_muestra$mean) + 20)) +
+  labs(
+    title = "Puntaje Promedio en Matemáticas: Cobertura de la Muestra",
+    subtitle = "Barras de error = Intervalo de confianza 95%",
+    x = NULL, y = "Puntaje Promedio (Matemáticas)"
+  ) +
+  theme_minimal()
+
+# Guardar el gráfico en outputs/figures
+ggsave("../outputs/figures/01_puntaje_cobertura_muestra.png",
+       plot = g_cobertura, width = 6, height = 4, dpi = 300)
+```
+
+```{r}
+#| label: grafico-puntaje-sector
+#| fig.width: 6
+#| fig.height: 4
+
+res_sector <- pisa.mean.pv(pvlabel = paste0("PV", 1:10, "MATH"), by = "es_privado", data = pisa_analisis)
+
+g_puvspr <- ggplot(res_sector, aes(x = es_privado, y = Mean, fill = es_privado)) +
+  geom_col(width = 0.55, show.legend = FALSE) +
+  geom_errorbar(aes(ymin = Mean - 1.96 * s.e., ymax = Mean + 1.96 * s.e.), width = 0.15) +
+  geom_text(aes(label = round(Mean, 0)), vjust = -1.8, size = 5, fontface = "bold") +
+  scale_fill_manual(values = c("Público" = "#2b5c8f", "Privado" = "#d95f02")) +
+  coord_cartesian(ylim = c(min(res_sector$Mean) - 20, max(res_sector$Mean) + 20)) +
+  labs(
+    title = "Puntaje Promedio en Matemáticas por Sector Institucional",
+    subtitle = "Barras de error = Intervalo de confianza 95%",
+    x = NULL, y = "Puntaje Promedio (Matemáticas)"
+  ) +
+  theme_minimal()
+
+ggsave("../outputs/figures/02_puntaje_puvspr.png",
+       plot = g_puvspr, width = 6, height = 4, dpi = 300)
+```
+
+```{r}
 #| label: grafico-distribucion-rendimiento
 #| fig.width: 6
 #| fig.height: 4
 
-# Distribución del rendimiento en matemáticas por sector
-g1 <- ggplot(pisa_analisis, aes(x = PV1MATH, fill = es_privado)) +
+# Distribución ponderada del rendimiento en matemáticas por sector
+g1 <- ggplot(pisa_analisis, aes(x = PV1MATH, fill = es_privado, weight = w_fstu)) +
   geom_density(alpha = 0.5) +
   scale_fill_manual(values = c("Público" = "#2b5c8f", "Privado" = "#d95f02")) +
-  labs(title = "Distribución del Rendimiento en Matemáticas",
+  labs(title = "Distribución del Rendimiento en Matemáticas (Ponderada)",
        x = "Puntaje PV1MATH", y = "Densidad", fill = "Sector") +
   theme_minimal()
 
 g1
+
+ggsave("../outputs/figures/03_dist.png",
+       plot = g1, width = 6, height = 4, dpi = 300)
 ```
 
 ```{r}
@@ -191,15 +284,18 @@ g1
 #| fig.width: 6
 #| fig.height: 4
 
-# Distribución del uso de IA por sector
-g2 <- ggplot(pisa_analisis, aes(x = uso_ia, fill = es_privado)) +
+# Distribución ponderada del uso de IA por sector
+g2 <- ggplot(pisa_analisis, aes(x = uso_ia, fill = es_privado, weight = w_fstu)) +
   geom_density(alpha = 0.5) +
   scale_fill_manual(values = c("Público" = "#2b5c8f", "Privado" = "#d95f02")) +
-  labs(title = "Distribución del Uso de IA",
+  labs(title = "Distribución del Uso de IA (Ponderada)",
        x = "Índice de Uso (SD)", y = "Densidad", fill = "Sector") +
   theme_minimal()
 
 g2
+
+ggsave("../outputs/figures/04_dist_ia.png",
+       plot = g2, width = 6, height = 4, dpi = 300)
 ```
 
 ```{r}
@@ -218,6 +314,8 @@ g3 <- ggplot(pisa_analisis, aes(x = uso_ia, y = PV1MATH, color = es_privado)) +
   theme_minimal()
 
 g3
+ggsave("../outputs/figures/05_relacion-b.png",
+       plot = g3, width = 6, height = 4, dpi = 300)
 ```
 
 ```{r}
@@ -256,6 +354,7 @@ ggplot(matriz_cor_long, aes(x = var1, y = var2, fill = correlacion)) +
   scale_fill_gradient2(low = "#d95f02", mid = "white", high = "#2b5c8f", midpoint = 0) +
   labs(title = "Matriz de Correlación", x = NULL, y = NULL, fill = "r") +
   theme_minimal()
+
 ```
 
 ### 4.4 Diagnóstico de multicolinealidad (VIF)
@@ -442,7 +541,7 @@ pred_pisa <- base_y + (b1 * grid_ia) + (b2 * (grid_ia^2))
 df_curva <- data.frame(uso_ia = grid_ia, pv_pred = pred_pisa)
 
 # 4. Gráfico con ggplot2
-ggplot(df_curva, aes(x = uso_ia, y = pv_pred)) +
+curva_aprend <- ggplot(df_curva, aes(x = uso_ia, y = pv_pred)) +
   geom_line(color = "#2b5c8f", linewidth = 1.2) +
   geom_vline(xintercept = optimo, linetype = "dashed", color = "#d95f02", linewidth = 1) +
   annotate("text", x = optimo + 0.4, y = min(df_curva$pv_pred) + 2,
@@ -454,6 +553,9 @@ ggplot(df_curva, aes(x = uso_ia, y = pv_pred)) +
     y = "Puntaje Predicho en Matemáticas"
   ) +
   theme_minimal()
+
+ggsave("../outputs/figures/06_curva.png",
+       plot = curva_aprend, width = 6, height = 4, dpi = 300)
 ```
 
 ### 5.4 Comparación del efecto: sector Público vs. Privado
@@ -497,7 +599,7 @@ df_comparativo <- bind_rows(
 )
 
 # 4. Gráfico comparativo final
-ggplot(df_comparativo, aes(x = uso_ia, y = pv_pred, color = Sector)) +
+curva_aprend_puvspr <- ggplot(df_comparativo, aes(x = uso_ia, y = pv_pred, color = Sector)) +
   geom_line(linewidth = 1.2) +
   scale_color_manual(values = c("Público" = "#2b5c8f", "Privado" = "#d95f02")) +
   labs(
@@ -508,4 +610,7 @@ ggplot(df_comparativo, aes(x = uso_ia, y = pv_pred, color = Sector)) +
     color = "Sostenimiento"
   ) +
   theme_minimal()
+
+ggsave("../outputs/figures/07_curva_puvspr.png",
+       plot = curva_aprend_puvspr, width = 6, height = 4, dpi = 300)
 ```

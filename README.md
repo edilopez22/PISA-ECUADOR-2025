@@ -54,6 +54,45 @@ PISA_IA_Ecuador/
 
 ---
 
+## 📈 Visualizaciones Clave
+
+### Cobertura de la muestra
+![Cobertura de la muestra](outputs/figures/01_puntaje_cobertura_muestra.png)
+
+El puntaje promedio de los estudiantes que reportaron su uso de IA (369) es apenas superior al promedio nacional (366), y sus intervalos de confianza se solapan casi por completo. Esto indica que la muestra analítica **no está sesgada de forma relevante** frente a la población general — filtrar por quienes respondieron la pregunta de uso de IA no distorsiona significativamente el punto de partida del análisis.
+
+### Rendimiento por sector institucional
+![Rendimiento público vs privado](outputs/figures/02_puntaje_puvspr.png)
+
+Aquí sí aparece una brecha clara: 415 puntos en colegios privados frente a 356 en públicos, con intervalos de confianza que **no se solapan**. La diferencia es estadísticamente significativa — el sector institucional está fuertemente asociado al rendimiento en matemáticas.
+
+### Distribución del rendimiento
+![Distribución del rendimiento](outputs/figures/03_dist.png)
+
+La curva del sector privado está desplazada hacia la derecha respecto al público, confirmando visualmente la brecha del gráfico anterior. El sector público muestra una distribución más concentrada entre 250 y 450 puntos, mientras que el privado tiene una cola más larga hacia puntajes altos (hasta ~600).
+
+### Distribución del uso de IA
+![Distribución del uso de IA](outputs/figures/04_dist_ia.png)
+
+Ambos sectores muestran una forma de distribución similar, con la mayor concentración de estudiantes entre -0.5 y 1 SD de uso. El sector privado tiene una densidad algo mayor en el rango medio-alto (0.5–1 SD), sugiriendo un uso ligeramente más intensivo de herramientas de IA que en el sector público.
+
+### Relación exploratoria entre uso de IA y rendimiento
+![Relación uso de IA vs rendimiento](outputs/figures/05_relacion-b.png)
+
+Sin ningún ajuste econométrico, ya se observan dos patrones: (1) la curva de colegios privados está consistentemente por encima de la de públicos en todo el rango de uso de IA, y (2) ambas curvas suben con el uso moderado y se aplanan o retroceden levemente en niveles altos de uso — una primera señal visual de la no linealidad que se confirma más adelante con el modelo formal.
+
+### Curva en U invertida (efecto general)
+![Curva en U invertida](outputs/figures/06_curva.png)
+
+Con el modelo cuadrático de efectos fijos, se confirma la hipótesis inicial: el rendimiento predicho sube con el uso de IA hasta un punto óptimo de **0.86 SD**, después del cual comienzan los rendimientos decrecientes. El efecto no es enorme en magnitud (varía entre ~360 y 376 puntos a lo largo de toda la curva), pero sigue el patrón esperado.
+
+### Curva en U invertida por sector
+![Curva en U por sector](outputs/figures/07_curva_puvspr.png)
+
+Separando por sector, ambas curvas mantienen la misma forma de U invertida, pero en niveles distintos: el sector privado se mueve entre ~380 y ~420 puntos, con su punto óptimo alrededor de 1 SD de uso; el público se mueve entre ~345 y ~368 puntos, con su punto óptimo un poco antes, cerca de 0.7–0.8 SD. Es decir, los estudiantes privados no solo parten de un nivel más alto, sino que también toleran un poco más de uso de IA antes de que aparezcan los rendimientos decrecientes.
+
+---
+
 ## 📋 Fuentes de Datos
 
 | Dataset | Fuente | Archivo |
